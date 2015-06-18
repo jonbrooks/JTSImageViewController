@@ -83,6 +83,7 @@ typedef struct {
 @property (assign, nonatomic, readwrite) JTSImageViewControllerBackgroundOptions backgroundOptions;
 @property (assign, nonatomic) JTSImageViewControllerStartingInfo startingInfo;
 @property (assign, nonatomic) JTSImageViewControllerFlags flags;
+@property (assign, nonatomic) BOOL lockXAxis;
 
 // Autorotation
 @property (assign, nonatomic) UIInterfaceOrientation lastUsedOrientation;
@@ -455,6 +456,9 @@ typedef struct {
         if ([self.optionsDelegate imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:self]) {
             self.imageView.alpha = 0;
         }
+    }
+    if ([self.optionsDelegate respondsToSelector:@selector(lockXAxisInImageViewer:)]) {
+        self.lockXAxis = [self.optionsDelegate lockXAxisInImageViewer:self];
     }
     
     // We'll add the image view to either the scroll view
@@ -1603,6 +1607,9 @@ typedef struct {
     }
     
     CGPoint velocity = [scrollView.panGestureRecognizer velocityInView:scrollView.panGestureRecognizer.view];
+    if (_lockXAxis) {
+        velocity.x = 0;
+    }
     if (scrollView.zoomScale == 1 && (JTSImageFloatAbs(velocity.x) > 1600 || JTSImageFloatAbs(velocity.y) > 1600 ) ) {
         [self dismiss:YES];
     }
@@ -1704,6 +1711,9 @@ typedef struct {
     CGPoint translation = [panner translationInView:panner.view];
     CGPoint locationInView = [panner locationInView:panner.view];
     CGPoint velocity = [panner velocityInView:panner.view];
+    if (_lockXAxis) {
+        velocity.x = 0;
+    }
     CGFloat vectorDistance = sqrtf(powf(velocity.x, 2)+powf(velocity.y, 2));
     
     if (panner.state == UIGestureRecognizerStateBegan) {
@@ -1754,10 +1764,21 @@ typedef struct {
     UIOffset offset = UIOffsetMake(panGestureLocationInView.x-imageCenter.x, panGestureLocationInView.y-imageCenter.y);
     self.imageDragOffsetFromImageCenter = offset;
     self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.imageView offsetFromCenter:offset attachedToAnchor:anchor];
+    if (_lockXAxis) {
+        CGFloat xCoordinate = self.imageView.frame.origin.x;
+        self.attachmentBehavior.action = ^{
+            if (self.imageView.frame.origin.x != xCoordinate) {
+                CGRect frame = self.imageView.frame;
+                frame.origin.x = xCoordinate;
+                self.imageView.frame = frame;
+            }
+        };
+    }
     [self.animator addBehavior:self.attachmentBehavior];
     UIDynamicItemBehavior *modifier = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
     modifier.angularResistance = [self appropriateAngularResistanceForView:self.imageView];
     modifier.density = [self appropriateDensityForView:self.imageView];
+    modifier.allowsRotation = (_lockXAxis ? NO : YES);
     [self.animator addBehavior:modifier];
 }
 
@@ -1794,7 +1815,13 @@ typedef struct {
     UIPushBehavior *push = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
     push.pushDirection = CGVectorMake(velocity.x*0.1, velocity.y*0.1);
     [push setTargetOffsetFromCenter:self.imageDragOffsetFromImageCenter forItem:self.imageView];
+    CGFloat xCoordinate = self.imageView.frame.origin.x;
     push.action = ^{
+        if (_lockXAxis && self.imageView.frame.origin.x != xCoordinate) {
+            CGRect frame = self.imageView.frame;
+            frame.origin.x = xCoordinate;
+            self.imageView.frame = frame;
+        }
         if ([weakSelf imageViewIsOffscreen]) {
             [weakSelf.animator removeAllBehaviors];
             weakSelf.attachmentBehavior = nil;

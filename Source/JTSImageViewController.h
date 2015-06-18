@@ -165,6 +165,14 @@ extern CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius;
  */
 - (CGFloat)backgroundBlurRadiusForImageViewer:(JTSImageViewController *)imageViewer;
 
+/**
+ Restrict movement of the image view on the x-axis. Swipe/flick will only operate
+ on the y-axis (up/down only). Also disables rotation of the image.
+ 
+ Defaults to 'NO'.
+ */
+- (BOOL)lockXAxisInImageViewer:(JTSImageViewController *)imageViewer;
+
 @end
 
 ///--------------------------------------------------------------------------------------------------------------------
