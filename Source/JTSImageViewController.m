@@ -84,6 +84,7 @@ typedef struct {
 @property (assign, nonatomic) JTSImageViewControllerStartingInfo startingInfo;
 @property (assign, nonatomic) JTSImageViewControllerFlags flags;
 @property (assign, nonatomic) BOOL lockXAxis;
+@property (assign, nonatomic) BOOL snapshotAfterUpdate;
 
 // Autorotation
 @property (assign, nonatomic) UIInterfaceOrientation lastUsedOrientation;
@@ -460,6 +461,10 @@ typedef struct {
     if ([self.optionsDelegate respondsToSelector:@selector(lockXAxisInImageViewer:)]) {
         self.lockXAxis = [self.optionsDelegate lockXAxisInImageViewer:self];
     }
+    
+    // This works around a bug in capturing screen shots on the iPad running an iPhone app,
+    // screen flicker/shift when screenshot is captured.
+    self.snapshotAfterUpdate = (((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) && [[UIDevice currentDevice].model hasPrefix:@"iPad"]) ? NO : YES);
     
     // We'll add the image view to either the scroll view
     // or the parent view, based on the transition style
@@ -884,7 +889,7 @@ typedef struct {
         // Replace the text view with a snapshot of itself,
         // to prevent the text from reflowing during the dismissal animation.
         [weakSelf verticallyCenterTextInTextView];
-        UIView *textViewSnapshot = [weakSelf.textView snapshotViewAfterScreenUpdates:YES];
+        UIView *textViewSnapshot = [weakSelf.textView snapshotViewAfterScreenUpdates:_snapshotAfterUpdate];
         textViewSnapshot.frame = weakSelf.textView.frame;
         [weakSelf.textView.superview insertSubview:textViewSnapshot aboveSubview:self.textView];
         weakSelf.textView.hidden = YES;
@@ -1219,7 +1224,7 @@ typedef struct {
     
     // Replace the text view with a snapshot of itself,
     // to prevent the text from reflowing during the dismissal animation.
-    UIView *textViewSnapshot = [self.textView snapshotViewAfterScreenUpdates:YES];
+    UIView *textViewSnapshot = [self.textView snapshotViewAfterScreenUpdates:_snapshotAfterUpdate];
     textViewSnapshot.frame = self.textView.frame;
     [self.textView.superview insertSubview:textViewSnapshot aboveSubview:self.textView];
     [self.textView removeFromSuperview];
@@ -1264,7 +1269,7 @@ typedef struct {
     
     UIViewController *presentingViewController = viewController.view.window.rootViewController;
     while (presentingViewController.presentedViewController) presentingViewController = presentingViewController.presentedViewController;
-    UIView *snapshot = [presentingViewController.view snapshotViewAfterScreenUpdates:YES];
+    UIView *snapshot = [presentingViewController.view snapshotViewAfterScreenUpdates:_snapshotAfterUpdate];
     snapshot.clipsToBounds = NO;
     return snapshot;
 }
@@ -1292,7 +1297,7 @@ typedef struct {
     UIGraphicsBeginImageContextWithOptions(scaledBounds.size, YES, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextConcatCTM(context, CGAffineTransformMakeTranslation(scaledOuterBleed, scaledOuterBleed));
-    [presentingViewController.view drawViewHierarchyInRect:scaledDrawingArea afterScreenUpdates:YES];
+    [presentingViewController.view drawViewHierarchyInRect:scaledDrawingArea afterScreenUpdates:_snapshotAfterUpdate];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
