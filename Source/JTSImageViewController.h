@@ -8,7 +8,17 @@
 
 @import UIKit;
 
+//! Project version number for JTSImageViewController.
+FOUNDATION_EXPORT double JTSImageViewControllerVersionNumber;
+
+//! Project version string for JTSImageViewController.
+FOUNDATION_EXPORT const unsigned char JTSImageViewControllerVersionString[];
+
+#import "JTSAnimatedGIFUtility.h"
 #import "JTSImageInfo.h"
+#import "JTSSimpleImageDownloader.h"
+#import "UIApplication+JTSImageViewController.h"
+#import "UIImage+JTSImageEffects.h"
 
 ///--------------------------------------------------------------------------------------------------------------------
 /// Definitions
