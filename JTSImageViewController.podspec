@@ -9,11 +9,11 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
   s.frameworks   = 'UIKit', 'ImageIO', 'Accelerate'
-  
+
   s.compiler_flags = "-fmodules"
-  
+
   s.ios.deployment_target = '7.0'
-  
+
   s.source_files = ['Source/*.{h,m}']
 
 end
