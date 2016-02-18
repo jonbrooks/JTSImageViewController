@@ -1771,11 +1771,12 @@ typedef struct {
     self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.imageView offsetFromCenter:offset attachedToAnchor:anchor];
     if (_lockXAxis) {
         CGFloat xCoordinate = self.imageView.frame.origin.x;
+        typeof(self) __weak weakSelf = self;
         self.attachmentBehavior.action = ^{
             if (self.imageView.frame.origin.x != xCoordinate) {
-                CGRect frame = self.imageView.frame;
+                CGRect frame = weakSelf.imageView.frame;
                 frame.origin.x = xCoordinate;
-                self.imageView.frame = frame;
+                weakSelf.imageView.frame = frame;
             }
         };
     }
