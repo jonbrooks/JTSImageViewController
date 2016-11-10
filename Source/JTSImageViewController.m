@@ -429,7 +429,13 @@ typedef struct {
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     self.blackBackdrop = [[UIView alloc] initWithFrame:CGRectInset(self.view.bounds, -512, -512)];
-    self.blackBackdrop.backgroundColor = [UIColor blackColor];
+    if ([self.optionsDelegate respondsToSelector:@selector(colorForBackgroundDimmingOverlayInImageViewer:)]) {
+        self.blackBackdrop.backgroundColor = [self.optionsDelegate colorForBackgroundDimmingOverlayInImageViewer:self];
+    } else {
+        self.blackBackdrop.backgroundColor = [UIColor blackColor];
+    }
+    
+    
     self.blackBackdrop.alpha = 0;
     [self.view addSubview:self.blackBackdrop];
     
