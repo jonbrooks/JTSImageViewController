@@ -53,7 +53,7 @@
 		A5F331401C76355200080678 = {
 			isa = PBXGroup;
 			children = (
-				A5F331551C76363800080678 /* Source */,
+				A5F331551C76363800080678 /* Sources */,
 				A5F3314B1C76355200080678 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,7 +66,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A5F331551C76363800080678 /* Source */ = {
+		A5F331551C76363800080678 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				A5F331571C76363800080678 /* JTSAnimatedGIFUtility.h */,
@@ -83,7 +83,7 @@
 				A5F331621C76363800080678 /* UIImage+JTSImageEffects.m */,
 				A5F331701C76370B00080678 /* Supporting Files */,
 			);
-			path = Source;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		A5F331701C76370B00080678 /* Supporting Files */ = {
@@ -151,6 +151,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = A5F331401C76355200080678;
