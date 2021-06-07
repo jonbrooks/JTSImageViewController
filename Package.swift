@@ -16,7 +16,11 @@ let package = Package(
         .target(
             name: "JTSImageViewController",
             path: "Source",
-            publicHeadersPath: ""
+            publicHeadersPath: "",
+            exclude: [
+                "JTSImageViewController-Prefix.pch",
+                "JTSImageViewController-Info.plist"
+            ]
         ),
     ]
 )
