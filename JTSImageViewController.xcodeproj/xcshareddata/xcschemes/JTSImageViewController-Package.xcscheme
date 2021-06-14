@@ -40,15 +40,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "JTSImageViewController::JTSImageViewController"
-            BuildableName = "JTSImageViewController.framework"
-            BlueprintName = "JTSImageViewController"
-            ReferencedContainer = "container:JTSImageViewController.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -56,15 +47,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "JTSImageViewController::JTSImageViewController"
-            BuildableName = "JTSImageViewController.framework"
-            BlueprintName = "JTSImageViewController"
-            ReferencedContainer = "container:JTSImageViewController.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
